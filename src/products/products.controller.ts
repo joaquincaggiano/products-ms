@@ -28,8 +28,8 @@ export class ProductsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')
