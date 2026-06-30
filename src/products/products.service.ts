@@ -50,10 +50,23 @@ export class ProductsService {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+    await this.findOne(id);
+
+    const product = await this.prisma.product.update({
+      where: { id },
+      data: updateProductDto,
+    });
+
+    return product;
   }
 
   async remove(id: number) {
-    return `This action removes a #${id} product`;
+    await this.findOne(id);
+
+    await this.prisma.product.delete({
+      where: { id },
+    });
+
+    return { message: 'Product deleted successfully' };
   }
 }
