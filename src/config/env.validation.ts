@@ -1,24 +1,17 @@
-import { plainToInstance } from 'class-transformer';
-import { IsInt, IsOptional, Min, validateSync } from 'class-validator';
+import { z } from 'zod';
 
-class EnvironmentVariables {
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  PORT: number = 3000;
-}
+export const envSchema = z.object({
+  PORT: z.coerce.number().int().min(1).default(3000),
+});
+
+export type EnvVars = z.infer<typeof envSchema>;
 
 export function validate(config: Record<string, unknown>) {
-  const validatedConfig = plainToInstance(EnvironmentVariables, config, {
-    enableImplicitConversion: true,
-  });
-  const errors = validateSync(validatedConfig, {
-    skipMissingProperties: false,
-  });
+  const result = envSchema.safeParse(config);
 
-  if (errors.length > 0) {
-    throw new Error(errors.toString());
+  if (!result.success) {
+    throw new Error(`Config validation error: ${result.error.message}`);
   }
 
-  return validatedConfig;
+  return result.data;
 }
