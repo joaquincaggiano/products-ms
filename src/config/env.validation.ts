@@ -1,7 +1,9 @@
+import 'dotenv/config';
 import { z } from 'zod';
 
 export const envSchema = z.object({
   PORT: z.coerce.number().int().min(1).default(3001),
+  DATABASE_URL: z.string().min(1),
 });
 
 export type EnvVars = z.infer<typeof envSchema>;
@@ -15,3 +17,5 @@ export function validate(config: Record<string, unknown>) {
 
   return result.data;
 }
+
+export const envs = validate(process.env);
