@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const envSchema = z.object({
-  PORT: z.coerce.number().int().min(1).default(3000),
+  PORT: z.coerce.number().int().min(1).default(3001),
 });
 
 export type EnvVars = z.infer<typeof envSchema>;
